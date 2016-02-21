@@ -1,6 +1,9 @@
 # viper-metascan
 Metadefender Core (Metascan v.4) analysis module for Viper malware analysis framework
 
+Metascan server IP and (if needed) username and password configured in the ms.py. 
+
+
 viper > ms -h<br/>
 usage: ms [-h] [-f] [-e] [-l] [--listworkflows] [-w WORKFLOW [WORKFLOW ...]]<br/>
 <br/>
@@ -15,7 +18,7 @@ optional arguments:<br/>
   -w WORKFLOW [WORKFLOW ...], --workflow WORKFLOW [WORKFLOW ...]<br/>
                         Use selected workflow<br/>
 
-Single file analysis:<br />
+<h2>Single file analysis:</h2>
 <br />
 viper 3725630036655b1bf9c9b6f0b555d663.doc > <br />
 [*] Session opened on /home/shark/viper/projects/fireeye/binaries/d/3/1/d/d31d4ccced028f11703b88cd0c610fc6b706892d7376d2a26124ab34fbea57f9<br />
