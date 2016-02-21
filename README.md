@@ -1,8 +1,9 @@
 # viper-metascan
 Metadefender Core (Metascan v.4) analysis module for Viper malware analysis framework
 
+##Configure
 Metascan server IP and (if needed) username and password configured in the ms.py. 
-
+##Usage
 ```
 viper > ms -h
 usage: ms [-h] [-f] [-e] [-l] [--listworkflows] [-w WORKFLOW [WORKFLOW ...]]
