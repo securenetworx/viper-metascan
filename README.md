@@ -15,7 +15,7 @@ optional arguments:<br/>
   -w WORKFLOW [WORKFLOW ...], --workflow WORKFLOW [WORKFLOW ...]<br/>
                         Use selected workflow<br/>
 
-Single file analysis<br />
+Single file analysis:<br />
 <br />
 viper 3725630036655b1bf9c9b6f0b555d663.doc > <br />
 [*] Session opened on /home/shark/viper/projects/fireeye/binaries/d/3/1/d/d31d4ccced028f11703b88cd0c610fc6b706892d7376d2a26124ab34fbea57f9<br />
