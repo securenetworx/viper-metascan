@@ -6,7 +6,7 @@ try:
     from viper.core.storage import get_sample_path
 except ImportError:
     # These for testing
-    sys.path.append("../../")
+    sys.path.append("../")
     from viper.common.abstracts import Module
     from viper.core.session import __sessions__
     from viper.core.storage import get_sample_path
@@ -24,7 +24,7 @@ except ImportError:
     HAVE_REQUESTS = True
 
 from terminaltables import AsciiTable
-from metascan import metascan_api
+from metascan import metascan_api_v4
 
 
 HOST = ""
@@ -40,7 +40,7 @@ def dequote(s):
 
 
 class MetaScan(Module):
-    cmd = 'ms'
+    cmd = 'ms4'
     description = 'Metadefender Core (Metascan v4) analysis module. (c) 2016 Secure Networx Ltd.'
     authors = ['Balint Kovacs', 'kovacsbalu']
 
@@ -62,15 +62,15 @@ class MetaScan(Module):
         self.was_api_error = False
 
         try:
-            self.metascan = metascan_api.MetaScanApi(HOST, PORT)
-        except metascan_api.MetaScanApiError as err:
+            self.metascan = metascan_api_v4.MetaScanApiv4(HOST, PORT)
+        except metascan_api_v4.MetaScanApiError as err:
             self.log('error', err)
             self.was_api_error = True
 
         if not self.was_api_error and USER and PASSWORD:
             try:
                 self.metascan.login(USER, PASSWORD)
-            except metascan_api.MetaScanApiError as err:
+            except metascan_api_v4.MetaScanApiError as err:
                 self.log('warning', err)
 
     def run(self):
