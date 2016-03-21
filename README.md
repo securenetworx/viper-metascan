@@ -2,11 +2,11 @@
 Metadefender Core (Metascan v.4) analysis module for Viper malware analysis framework
 
 ##Configure
-Metascan server IP and (if needed) username and password configured in the ms.py. 
+Metascan server IP and (if needed) username and password configured in the ms4.py. 
 ##Usage
 ```
-viper > ms -h
-usage: ms [-h] [-f] [-e] [-l] [--listworkflows] [-w WORKFLOW [WORKFLOW ...]]
+viper > ms4 -h
+usage: ms4 [-h] [-f] [-e] [-l] [--listworkflows] [-w WORKFLOW [WORKFLOW ...]]
 
 Metadefender Core (Metascan v4) analysis module. (c) 2016 Secure Networx Ltd.
 
@@ -23,7 +23,7 @@ optional arguments:
 ```
 viper 3725630036655b1bf9c9b6f0b555d663.doc >
 [*] Session opened on /home/shark/viper/projects/fireeye/binaries/d/3/1/d/d31d4ccced028f11703b88cd0c610fc6b706892d7376d2a26124ab34fbea57f9
-viper 3725630036655b1bf9c9b6f0b555d663.doc >ms
+viper 3725630036655b1bf9c9b6f0b555d663.doc >ms4
 +3725630036655b1bf9c9b6f0b555d663.doc-----------------+---------------------+
 | Engine      | Threat                                | Def. time           |
 +-------------+---------------------------------------+---------------------+
@@ -54,7 +54,7 @@ viper > find tag 20160126
 | 2 | dfa925d1e0ecc10a22f18a75e42c8679.rtf | text/rtf                 | dfa925d1e0ecc10a22f18a75e42c8679 | 20160126 |
 | 3 | 040d71e5124a073e78ed6bcd4eeedd7e.xls | application/vnd.ms-excel | 040d71e5124a073e78ed6bcd4eeedd7e | 20160126 |
 +---+--------------------------------------+--------------------------+----------------------------------+----------+
-viper >ms -f
+viper >ms4 -f
 +3725630036655b1bf9c9b6f0b555d663.doc-----------------+---------------------+
 | Engine      | Threat                                | Def. time           |
 +-------------+---------------------------------------+---------------------+
