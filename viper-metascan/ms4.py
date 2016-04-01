@@ -1,15 +1,6 @@
-import sys
-
-try:
-    from viper.common.abstracts import Module
-    from viper.core.session import __sessions__
-    from viper.core.storage import get_sample_path
-except ImportError:
-    # These for testing
-    sys.path.append("../")
-    from viper.common.abstracts import Module
-    from viper.core.session import __sessions__
-    from viper.core.storage import get_sample_path
+from viper.common.abstracts import Module
+from viper.core.session import __sessions__
+from viper.core.storage import get_sample_path
 
 try:
     from dateutil import parser
@@ -33,19 +24,13 @@ USER = ""
 PASSWORD = ""
 
 
-def dequote(s):
-    if (s[0] == s[-1]) and s.startswith(("'", '"')):
-        return s[1:-1]
-    return s
-
-
-class MetaScan(Module):
+class ViperMetaScan(Module):
     cmd = 'ms4'
     description = 'Metadefender Core (Metascan v4) analysis module. (c) 2016 Secure Networx Ltd.'
     authors = ['Balint Kovacs', 'kovacsbalu']
 
     def __init__(self):
-        super(MetaScan, self).__init__()
+        super(ViperMetaScan, self).__init__()
         if not HAVE_DATEUTIL:
             self.log('error', "Missing dependency, install dateutil (`pip install python-dateutil>=2.2`)")
         if not HAVE_REQUESTS:
@@ -57,65 +42,79 @@ class MetaScan(Module):
         self.parser.add_argument('--listworkflows', help='List workflows', action='store_true')
         self.parser.add_argument('-w', "--workflow", help='Use selected workflow', nargs="+", default="Default")
 
-        self.files = []
-        self.workflow = ''
-        self.was_api_error = False
-
-        try:
-            self.metascan = metascan_api_v4.MetaScanApiv4(HOST, PORT)
-        except metascan_api_v4.MetaScanApiError as err:
-            self.log('error', err)
-            self.was_api_error = True
-
-        if not self.was_api_error and USER and PASSWORD:
-            try:
-                self.metascan.login(USER, PASSWORD)
-            except metascan_api_v4.MetaScanApiError as err:
-                self.log('warning', err)
+        self.ms = MetaScan(HOST, PORT, USER, PASSWORD, self.log)
 
     def run(self):
-        super(MetaScan, self).run()
+        super(ViperMetaScan, self).run()
 
-        if self.was_api_error:
+        if self.ms.was_api_error:
             return
 
         if self.args:
             if self.args.workflow:
                 if isinstance(self.args.workflow, list):
-                    self.workflow = dequote(' '.join(self.args.workflow))
+                    self.ms.workflow = self.dequote(' '.join(self.args.workflow))
                 else:
-                    self.workflow = self.args.workflow
+                    self.ms.workflow = self.args.workflow
             if self.args.engines:
-                self.show_engines()
+                self.ms.show_engines()
             elif self.args.license:
-                self.show_license()
+                self.ms.show_license()
             elif self.args.listworkflows:
-                self.show_workflows()
+                self.ms.show_workflows()
             elif self.args.find:
                 if not __sessions__.find:
                     self.log('error', "No find result")
                     return
-                self.files = self.get_files_from_last_find()
+                self.ms.files = self.get_files_from_last_find(__sessions__)
             else:
                 if not __sessions__.is_set():
                     self.log('error', "No session opened")
                     return
-                self.files = self.get_file_from_current_session()
-            if self.files:
-                summary = self.show_analyzed_info()
-                self.show_summary(summary)
+                self.ms.files = self.get_file_from_current_session(__sessions__)
+            if self.ms.files:
+                summary = self.ms.show_analyzed_info()
+                self.ms.show_summary(summary)
 
-    def get_files_from_last_find(self):
+    @staticmethod
+    def dequote(s):
+        if (s[0] == s[-1]) and s.startswith(("'", '"')):
+            return s[1:-1]
+        return s
+
+    @staticmethod
+    def get_files_from_last_find(sessions):
         files = []
-        if __sessions__.find:
-            for item in __sessions__.find:
-                path = get_sample_path(item.sha256)
-                files.append((path, item.name))
+        for item in sessions.find:
+            path = get_sample_path(item.sha256)
+            files.append((path, item.name))
         return files
 
-    def get_file_from_current_session(self):
-        curr = __sessions__.current
+    @staticmethod
+    def get_file_from_current_session(sessions):
+        curr = sessions.current
         return [(curr.file.path, curr.file.name)]
+
+
+class MetaScan():
+
+    def __init__(self, host, port, user, password, log):
+        self.log = log
+        self.workflow = ''
+        self.was_api_error = False
+        try:
+            self.metascan = metascan_api_v4.MetaScanApiv4(host, port)
+        except metascan_api_v4.MetaScanApiError as err:
+            self.log('error', err)
+            self.was_api_error = True
+
+        if not self.was_api_error and user and password:
+            try:
+                self.metascan.login(user, password)
+            except metascan_api_v4.MetaScanApiError as err:
+                self.log('warning', err)
+
+        self.files = []
 
     def show_analyzed_info(self):
         summary_table = [["Filename", "md5", "status"]]
@@ -135,7 +134,8 @@ class MetaScan(Module):
             print table.table
         return summary_table
 
-    def show_summary(self, summary_table):
+    @staticmethod
+    def show_summary(summary_table):
         sum_table = AsciiTable(summary_table, "Summary")
         print sum_table.table
 
@@ -171,11 +171,3 @@ class MetaScan(Module):
         table = AsciiTable(details, "Licenses")
         table.inner_heading_row_border = False
         print table.table
-
-
-if __name__ == "__main__":
-    print "--- Test ---"
-    ms = MetaScan()
-    ms.show_workflows()
-    ms.show_engines()
-    ms.show_license()
