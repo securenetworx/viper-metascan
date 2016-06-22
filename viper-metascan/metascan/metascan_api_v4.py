@@ -19,14 +19,14 @@ class MetaScanApiv4(object):
         self.base_url = "%s:%d" % (ip, port)
         self.api_key = None
         try:
-            requests.get(url='http://{}/stat/engines'.format(self.base_url), timeout=5)
+            requests.get(url='http://{0}/stat/engines'.format(self.base_url), timeout=5)
         except requests.exceptions.Timeout:
             raise MetaScanApiError("Could not connect to MetaScan server [{0}:{1}].".format(ip, port))
         except requests.exceptions.RequestException as e:
-            raise MetaScanApiError("MetaScan Error: {}".format(e))
+            raise MetaScanApiError("MetaScan Error: {0}".format(e))
 
     def login(self, name, passwd):
-        url = 'http://{}/login'.format(self.base_url)
+        url = 'http://{0}/login'.format(self.base_url)
         params = {"user": name, "password": passwd}
         login = requests.post(url=url, json=params)
         self.api_key = login.json().get("session_id")
@@ -34,11 +34,11 @@ class MetaScanApiv4(object):
             raise MetaScanApiError("MetaScan login error. Check username and password.")
 
     def get_workflows(self):
-        url = 'http://{}/file/workflows'.format(self.base_url)
+        url = 'http://{0}/file/workflows'.format(self.base_url)
         return requests.get(url=url)
 
     def scan_file(self, fd, filename='', workflow=''):
-        url = 'http://{}/file'.format(self.base_url)
+        url = 'http://{0}/file'.format(self.base_url)
         headers = {"filename": filename}
         if workflow:
             headers["workflow"] = workflow
@@ -47,7 +47,7 @@ class MetaScanApiv4(object):
         return requests.post(url=url, data=data, headers=headers)
 
     def get_scan_results_by_data_id(self, data_id):
-        url = 'http://{}/file/{}'.format(self.base_url, data_id)
+        url = 'http://{0}/file/{1}'.format(self.base_url, data_id)
         return requests.get(url=url)
 
     def scan_file_and_get_results(self, fd, filename='', workflow=''):
@@ -67,10 +67,10 @@ class MetaScanApiv4(object):
         return response
 
     def get_engines(self):
-        url = 'http://{}/stat/engines'.format(self.base_url)
+        url = 'http://{0}/stat/engines'.format(self.base_url)
         return requests.get(url=url)
 
     def get_license(self):
-        url = 'http://{}/admin/license'.format(self.base_url)
+        url = 'http://{0}/admin/license'.format(self.base_url)
         headers = dict(apikey=self.api_key)
         return requests.get(url=url, headers=headers)
