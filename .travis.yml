@@ -1,0 +1,8 @@
+language: python
+python:
+  - "2.7"
+install:
+- pip install coveralls requests requests_mock
+script: coverage run --source viper-metascan/metascan/ -m py.test tests -v
+after_success:
+  coveralls
