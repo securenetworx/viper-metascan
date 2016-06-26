@@ -5,6 +5,11 @@ import sys
 sys.path.append("viper-metascan")
 from metascan import metascan_api_v4
 
+PYBUILTINS = "builtins"
+if sys.version_info[0] < 3:
+    PYBUILTINS = "__builtin__"
+
+
 
 class TestMetaScanApiV4(object):
 
@@ -27,7 +32,7 @@ class TestMetaScanApiV4(object):
         data_id = "fakedataid"
         with requests_mock.mock() as m:
             m.post('%s/file' % self.ms_url, text='{"data_id":"%s"}' % data_id)
-            with mock.patch('__builtin__.open', mock.mock_open()):
+            with mock.patch('%s.open' % PYBUILTINS, mock.mock_open()):
                 resp = self.metascan.scan_file("fake/file/path", "fake_file_name")
                 assert resp.json()["data_id"] == data_id
 
@@ -46,6 +51,6 @@ class TestMetaScanApiV4(object):
             m.post('%s/file' % self.ms_url, text='{"data_id":"%s"}' % data_id)
             m.get('%s/file/%s' % (self.ms_url, data_id), text=scan_res)
             resp = self.metascan.get_scan_results_by_data_id(data_id)
-            with mock.patch('__builtin__.open', mock.mock_open()):
+            with mock.patch('%s.open' % PYBUILTINS, mock.mock_open()):
                 resp = self.metascan.scan_file_and_get_results("fake/file/path", "fake_file_name")
                 assert resp.text == scan_res
