@@ -1,4 +1,7 @@
 # viper-metascan
+
+[![Build Status](https://travis-ci.org/securenetworx/viper-metascan.svg?branch=master)](https://travis-ci.org/securenetworx/viper-metascan)
+
 Metadefender Core (Metascan v.4) analysis module for Viper malware analysis framework
 
 ##Configure
