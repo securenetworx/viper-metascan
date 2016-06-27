@@ -11,7 +11,7 @@ if sys.version_info[0] < 3:
 
 
 
-class TestMetaScanApiV4(object):
+class TestMetaScanApiV3(object):
 
     def setup_method(self, method):
         self.ms_host = "localhost"
