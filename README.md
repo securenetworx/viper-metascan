@@ -4,7 +4,7 @@
 
 Metadefender Core (Metascan v.4) analysis module for Viper malware analysis framework
 
-##Configure
+## Configure
 
 Metascan server IP and (if needed) username and password configured in the ms4.py. 
 
